@@ -1,0 +1,95 @@
+<table border="0" cellpadding="1" id="remisiones" width="100%">
+   <tr>
+    <th>NUMERO</th>
+    <th>CLIENTE</th>
+    <th>DIRECCIÓN</th>
+    <th>FECHA</th>
+    <!--<th>VENC.</th>
+    <th>ATRASO</th>-->
+    <th>TOTAL</th>
+    <!--<th>ANTICIPOS</th>-->
+    <th>PAGADO</th>
+    <th>SALDO</th>
+    <th>DESCUENTO</th>
+     <th>FECHA</th>
+      <th>ABONO</th>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+    <!--<th>&nbsp;</th>-->
+  </tr>
+        <?php 
+		 $i=1;	
+		 $cliente = new Clientes();
+		 $dir = new Direccion();
+		  $recenc = new RecibosCaja();
+		 $rec = new DetalleRecibosCaja();
+		 $ant = new AnticiposFactura();
+		 $antenc = new Anticipos();
+		 $c1 = 0;
+		 $c2 = 0;
+		 $c3 = 0;
+		 $c4 = 0;
+		 $c5 = 0;
+		 // 1 - 
+		 // 2 - 
+		 foreach($facturas as $fac): ?>  
+          <tr>
+            <td><?php echo $fac->prefijo."-".intval($fac->consecutivo); ?></td>
+            <td><?php echo utf8_encode($fac->razon_social);  ?></td>
+            <td><?php echo utf8_encode($fac->direccion);  ?></td>
+            <td><?php echo $fac->fecha ; ?></td>
+            <!--<td><?php echo $fac->vencimiento ; ?></td>
+            <td><?php echo $fac->atraso; ?></td>-->
+            <td align="right">$<?php echo number_format($fac->total,0);    $c1 += $fac->total; ?></td>
+            <!--<td align="right">$<?php echo number_format($fac->anticipo,0); $c2 += $fac->anticipo;?></td>-->
+            <td align="right">$<?php echo number_format($fac->pagado + $fac->anticipo - $fac->descontado,0);   $c3 += $fac->pagado + $fac->anticipo - $fac->descontado;?></td>
+            <td align="right">$<?php echo number_format($fac->total-$fac->anticipo-$fac->pagado,0); $c4+= $fac->total-$fac->anticipo-$fac->pagado;?></td>
+            <td align="right">$<?php echo number_format($fac->descontado,0); $c5 += $fac->descontado;?></td>
+          	<td colspan="2">
+            	<table width="100%" cellpadding="1" cellspacing="1" border="0" style="padding:0px;">
+                	<!--<tr><td width="50%">FECHA</td><td width="50%">ABONO</td></tr>-->
+                <tr>
+            	<?php foreach($ant->find(" factura_id = '$fac->id' and anulado = 0") as $ant): ?>
+                			<td width="50%"><?php echo $antenc->findFirst(" id = '$ant->anticipos_id' ")->fecha; ?></td><td width="50%">$<?php echo number_format($ant->valor,0); ?></td>
+				<?php endforeach; ?>
+                </tr>
+                <tr>
+                <?php foreach($rec->find(" factura_id = '$fac->id' and anulado = 0") as $rec): ?>
+                			<td width="50%"><?php echo $recenc->findFirst(" id = '$rec->recibos_caja_id' ")->fecha; ?></td><td width="50%">$<?php echo number_format($rec->total - $rec->descuento,0); ?></td>		
+				<?php endforeach; ?>
+                </tr>
+           		 </table>
+            </td>
+            <?php if($fac->empresa_id == 2){ ?>
+            <td><?php echo Tag::linkTo("facturacion/show/$fac->id", Tag::image("64x64/Search.png","width: 20"),"target: _blank") ?></td>
+            
+            <td><?php echo Tag::linkTo("print/facturacion_html/$fac->id", Tag::image("iconos/impresora.png","width: 20"),"target: _blank") ?></td>
+            <td><?php echo Tag::linkTo("facturacion/modificar/$fac->id", Tag::image("64x64/Edit.png","width: 20"),"target: _blank") ?></td>
+            <?php }
+				if($fac->empresa_id == 1){
+			 ?>
+            <td><?php echo Tag::linkTo("cuenta_cobro/show/$fac->id", Tag::image("64x64/Search.png","width: 20"),"target: _blank") ?></td>
+            <td><?php echo Tag::linkTo("print/cuenta_cobro_html/$fac->id", Tag::image("iconos/impresora.png","width: 20"),"target: _blank") ?></td>
+           <td><?php echo Tag::linkTo("cuenta_cobro/modificar/$fac->id", Tag::image("64x64/Edit.png","width: 20"),"target: _blank") ?></td>
+            <?php }?>
+            <td>
+				   <?php //echo Tag::button("Pagos","id: ver_pagos$i","name: ver_pagos$i","onClick: ver_pagos_realizados($fac->id,$fac->empresa_id)"); ?>
+                </td>
+          </tr>
+        <?php $i++; endforeach; ?> 
+         <tr>
+            <th colspan="4" align="right">TOTALES</th>
+            <td align="right">$<?php echo number_format($c1,0); ?></td>
+           <!--<td align="right">$<?php echo number_format($c2,0); ?></td>-->
+           <td align="right">$<?php echo number_format($c3,0); ?></td>
+           <td align="right">$<?php echo number_format($c4,0); ?></td>
+           <td align="right">$<?php echo number_format($c5,0); ?></td>
+           <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+           <!-- <td>&nbsp;</td> -->
+  </tr>
+ </table>
+
+<?php echo view::getContent(); ?>

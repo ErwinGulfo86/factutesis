@@ -1,0 +1,72 @@
+<?php echo Tag::formRemote("libros/trae_clientes_detalles", "update: mensajes", "id: detalleclientes","name: detalleclientes"); ?>
+
+<h1>FORMULARIO DE BUSQUEDA  </h1>
+
+<table width="100%" border="0" cellpadding="0" id="r1">
+  
+ 
+  <tr>
+    <th colspan="4" align="center">LISTADO DE CLIENTES</th>
+  </tr>
+  <tr>
+    <td width="26%" align="right">EMPRESA</td>
+    <td colspan="3" align="left">
+		<?php $empresa = new Empresa(); echo Tag::select("empresa_id",$empresa->find(),'using: id,nombre_empresa'); ?>
+        <script>$('empresa_id').value = '<?php echo Session::get("id_empresa"); ?>';</script>
+        </td>
+  </tr>
+   <tr>
+    <td align="right">CODIGO</td>
+    <td colspan="2">
+	<?php echo Tag::textField("codigo","size: 10"); ?>
+    <?php if(isset($_REQUEST["codigo"])){ ?>
+			<script> $('codigo').value = '<?php echo $_REQUEST["codigo"]; ?>';  </script>		
+    <?php } ?>
+    </td>
+    <td width="33%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="right">NOMBRE CLIENTE</td>
+    <td colspan="2"><?php echo Tag::textField("razon_social","size: 50"); ?></td>
+    <td width="33%">&nbsp;</td>
+  </tr>
+  <!--<tr>
+    <td align="right">DIRECCION</td>
+    <td colspan="2"><?php //echo Tag::textField("direccion","size: 50"); ?></td>
+    <td>&nbsp;</td>
+  </tr>-->
+  <tr>
+    <td colspan="4"><div align="center"><?php echo Tag::submitButton("Enviar"); ?></div></td>
+  </tr>
+</table>
+
+<div align="center">
+  <table border="0" cellpadding="2" id="remisiones"  cellspacing="2">
+    <tr>
+      <td align="center"><?php echo Tag::linkTo("#", Tag::image("64x64/Back.png",'width: 32px'),"onClick: window.close();") ?></td>
+      <td align="center"><?php echo Tag::linkTo("menu/", Tag::image("iconos/inicio.png",'width: 32px'),"tittle: Regresar al Menu"); ?></td>
+    </tr>
+    <tr>
+      <td align="center">Regresar</td>
+      <td align="center">Inicio</td>
+    </tr>
+  </table>
+</div>
+
+<div id="mensajes" style="min-height:400px;"></div>
+
+<div align="center">
+  <table border="0" cellpadding="2" id="remisiones"  cellspacing="2">
+    <tr>
+      <td align="center"><?php echo Tag::linkTo("#", Tag::image("64x64/Back.png",'width: 32px'),"onClick: window.close();") ?></td>
+      <td align="center"><?php echo Tag::linkTo("menu/", Tag::image("iconos/inicio.png",'width: 32px'),"tittle: Regresar al Menu"); ?></td>
+    </tr>
+    <tr>
+      <td align="center">Regresar</td>
+      <td align="center">Inicio</td>
+    </tr>
+  </table>
+</div>
+
+
+<?php echo Tag::endForm(); ?>

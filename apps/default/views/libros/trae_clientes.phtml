@@ -1,0 +1,67 @@
+<?php echo Tag::formRemote('libros/trae_clientes_detalles','update: div_detalle_clientes'); ?>
+
+<table width="100%" style="font-size:12px;">
+	<tr>
+    	<th height="24" colspan="4">FORMULARIO BUSCAR CLIENTES</th>
+    </tr>
+    <tr>
+      <th width="25%" align="right">CODIGO:</th>
+      <td colspan="3" align="left"><?php echo Tag::textField("codigo","size: 12"); ?></td>
+    </tr>
+    <tr>
+      <th width="25%" align="right">NIT:</th>
+      <td colspan="3" align="left"><?php echo Tag::textField("nit","size: 12"); ?></td>
+    </tr>
+    <tr>
+      <th align="right">RAZON SOCIAL</th>
+      <td colspan="3" align="left"><?php echo Tag::textField("razon_social","size: 50"); ?></td>
+    </tr>
+    <tr>
+      <th align="right">NOMBRE 1</th>
+      <td width="25%" align="left"><?php echo Tag::textField("nombre1","size: 20"); ?></td>
+      <th width="19%" align="right">NOMBRE 2</th>
+      <td width="31%" align="left"><?php echo Tag::textField("nombre2","size: 20"); ?></td>
+    </tr>
+    <tr>
+      <th align="right">APELLIDO 1 </th>
+      <td align="left"><?php echo Tag::textField("apellido1","size: 20"); ?></td>
+      <th align="right">APELLIDO 2</th>
+      <td align="left"><?php echo Tag::textField("apellido2","size: 20"); ?></td>
+    </tr>
+    <tr>
+      <th align="right">ORDERNAR POR</th>
+      <td colspan="3" align="left"><?php
+							$order = array(
+							'id' => 'CODIGO',	
+							'razon_social' => 'RAZON SOCIAL',
+							'nit' => 'NIT O CEDULA',
+							'nombre1' => 'PRIMER NOMBRE',
+							'nombre2' => 'SEGUNDO NOMBRE',
+							'apellido1' => 'PRIMER APELLIDO',
+							'apellido2' => 'SEGUNDO APELLIDO'
+							);
+							echo Tag::selectStatic("orderby", $order); ?>      </td>
+    </tr>
+    <tr>
+      <td colspan="4" align="center"><?php echo Tag::submitButton("Buscar Clientes","id: find_clientes","name: find_clientes"); ?>       </td>
+    </tr>
+</table>
+
+<div id="div_detalle_clientes">
+	<table width="100%" style="font-size:12px;">
+	
+    <tr>
+    	<th>CODIGO</th>
+        <th>NIT</th>
+        <th>RAZON SOCIAL</th>
+        <th>NOMBRE 1</th>
+        <th>NOMBRE 2</th>
+        <th>APELLIDO 1</th>
+        <th>APELLIDO 2</th>
+        <th>ESCOGER</th>
+    </tr>
+    
+</table>
+
+</div>
+<?php echo Tag::endForm(); ?>

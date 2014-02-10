@@ -1,0 +1,27 @@
+<table border="0" cellpadding="1" id="remisiones" width="100%">
+   <tr>
+    <th>NUMERO</th>
+    <th>CLIENTE</th>
+    <th>DIRECCIÓN</th>
+    <th>FECHA</th>
+    <th>VER</th>
+    <th>MOD.</th>
+    <th>IMPRIMIR</th>
+  </tr>
+        <?php 
+		 $i=0;	
+		 $cliente = new Clientes();
+		 $dir = new Direccion();
+		 foreach($remisiones as $rem): ?>  
+          <tr>
+            <td><?php echo $rem->prefijo.$rem->consecutivo; ?></td>
+            <td><?php echo utf8_encode($cliente->findFirst("id = '$rem->clientes_id'")->razon_social);  ?></td>
+            <td><?php echo utf8_encode($dir->findFirst("id = '$rem->direccion_id'")->direccion);  ?></td>
+            <td><?php echo $rem->fecha ; ?></td>
+            <td align="center"><?php echo Tag::linkTo("remisiones/show/$rem->id", Tag::image("64x64/Search.png",'width: 20px'),"target: _blank"); ?></td>
+            <td align="center"><?php echo Tag::linkTo("remisiones/modificar/$rem->id", Tag::image("64x64/Edit.png",'width: 20px'),"target: _blank"); ?></td>
+            <td align="center"><?php echo Tag::linkTo("print/remisiones_html/$rem->id", Tag::image("iconos/impresora.png",'width: 20px'),"target: _blank"); ?></td>
+  </tr>
+        <?php $i++; endforeach; ?> 
+ </table>
+<div id="mensajes">

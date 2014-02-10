@@ -1,0 +1,18 @@
+<table width="100%" cellpadding="1" cellspacing="1" style="font-size:11pt;">
+    <tr>
+    	<th>COD.</th>
+        <th>NIT</th>
+        <th>RAZON SOCIAL</th>
+        <th>&nbsp;</th>
+  </tr>
+  <?php foreach($clientes as $cli): ?>
+  	   <tr>
+    	<td><?php echo $cli->id; ?></td>
+        <td><?php echo $cli->nit; ?></td>
+        <td><?php echo utf8_encode($cli->razon_social); ?></td>
+        <td><?php echo Tag::linkTo("libros/trae_detalle_clientes/?clientes_id=$cli->id&empresa_id=".$_REQUEST["empresa_id"], "VER HISTORICO","style: color:#000000;","target: _blank"); ?>  </td>
+  </tr>
+  <?php endforeach; ?>
+</table>
+<?php echo view::getContent(); ?>
+

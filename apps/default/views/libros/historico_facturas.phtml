@@ -1,0 +1,232 @@
+
+<br /><br />
+<h1>REPORTE DE FACTURAS POR CLIENTE</h1>
+<h1>Empresa: <?php echo $empresa->nombre_empresa; ?></h1>
+<br />
+<?php echo Tag::form("libros/historico_facturas", "id: facturas","name: facturas"); ?>
+
+<table width="100%" border="0" cellpadding="0" id="r1">
+  
+  <tr>
+    <th colspan="4" align="center">ESCOJA SU LA EMPRES A CONSULTAR</th>
+  </tr>
+  <tr>
+    <td align="right">EMPRESA:</td>
+    <td colspan="3">
+		<?php $empresa = new Empresa(); echo Tag::select("empresa_id",$empresa->find(),'using: id,nombre_empresa'); ?>
+        
+        <script>
+			/*si cedula*/
+				<?php if(isset($_REQUEST["empresa_id"])){ 
+						echo "$('empresa_id').value = '".$_REQUEST["empresa_id"]."';"; 
+						}else{ 
+				?>
+					/*si cedula*/
+				$('empresa_id').value = '<?php echo Session::get("id_empresa"); ?>'; 
+        		<?php } ?>
+		</script>  		
+         </td>
+  </tr>
+  <tr>
+  	<td>BUSCAR CLIENTE</td>
+    <td colspan="3">
+		<?php echo Tag::textField("nombre_cliente","size: 50","readOnly: readOnly","style: background: #cccccc;"); ?>
+        <?php echo Tag::hiddenField("clientes_id","size: 12"); ?>
+        <?php echo Tag::button("Buscar Clientes","id: btnbuscar_clientes","name: btnbuscar_clientes","onClick: buscar_clientes_hfacturas(".core::getInstancePath().");"); ?>
+        <?php echo Tag::textField("cedula","size: 15"); ?><?php echo Tag::Button("Verificar","id: verificar","name: verificar"); ?>
+        <script>
+        	/*si cedula*/
+				<?php if(isset($_REQUEST["cedula"])){ echo "$('cedula').value = '".$_REQUEST["cedula"]."';"; } ?>
+			/*si cedula*/
+        </script>
+        <script>
+				
+				//agregar productos
+				 new Event.observe("verificar", "click", function(){	
+					
+						if($('cedula').value!=''){				
+									url = 	"<?php echo core::getInstancePath(); ?>clientes/verificar/"+$('cedula').value;
+									new Ajax.Updater('div_verificar'
+												, url
+												, { method: 'get' 
+												, evalScripts: true
+												, encoding: 'ISO-8859-1'
+											});
+						}else{
+							alert("escriba un numero de cedula");
+						}
+						
+					});
+
+        </script>
+         
+        <div id="div_verificar"></div>    </td>
+  </tr>
+  <!-- <tr>
+    <td><div align="right">DESDE</div></td>
+    <td><?php echo Tag::dateFieldMod("desde","size: 10"); ?></td>
+    <td><div align="right">HASTA</div></td>
+    <td><?php echo Tag::dateFieldMod("hasta","size: 10"); ?></td>
+  </tr> -->
+  
+   <!--<tr>
+    <td colspan="4" align="center">
+    		<?php 		$mes = array(	"1"=>"ENERO",
+										"2"=>"FEBRERO",
+										"3"=>"MARZO",
+										"4"=>"ABRIL",
+										"5"=>"MAYO",
+										"6"=>"JUNIO",
+										"7"=>"JULIO",
+										"8"=>"AGOSTO",
+										"9"=>"SEPTIEMBRE",
+										"10"=>"OCTUBRE",
+										"11"=>"NOVIEMBRE",
+										"12"=>"DICIEMBRE"
+									); ?>
+    		MES <?php echo Tag::selectStatic("mes",$mes); ?> AÑO <?php echo Tag::textField("yyyy","size: 4","maxlength: 4","value: ".date("Y")); ?>
+            	<script>
+                	$('mes').value = '<?php echo intval(date("m")); ?>';
+                </script>
+            </td>
+  </tr>-->
+  
+  <tr>
+    <td colspan="4"><div align="center"><?php echo Tag::submitButton("Enviar"); ?></div></td>
+  </tr>
+</table>
+
+<?php echo Tag::endForm(); ?>
+
+<br />
+
+<table border="0" cellpadding="1" id="remisiones" width="100%">
+   <tr>
+    <th>NUMERO</th>
+    <th>CLIENTE</th>
+    <th>DIRECCIÓN</th>
+    <th>FECHA</th>
+    <!--<th>VENC.</th>-->
+    <!--<th>ATRASO</th>-->
+    <th>TOTAL</th>
+    <!--<th>ANTICIPOS</th>-->
+    <th>PAGADO</th>
+    <th>SALDO</th>
+    <th>DESCUENTO</th>
+    <th>FECHA</th>
+    <th>ABONO</th>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+    <!--<th>&nbsp;</th>-->
+  </tr>
+        <?php 
+		 $i=0;	
+		 $cliente = new Clientes();
+		 $dir = new Direccion();
+		 $recenc = new RecibosCaja();
+		 $rec = new DetalleRecibosCaja();
+		 $ant = new AnticiposFactura();
+		 $antenc = new Anticipos();
+		 $c1 = 0;
+		 $c2 = 0;
+		 $c3 = 0;
+		 $c4 = 0;
+		 $c5 = 0;
+		 
+		 foreach($facturas as $fac): 
+		 
+		 ?>  
+          <tr>
+            <td><?php echo $fac->prefijo."-".intval($fac->consecutivo); ?></td>
+            <td><?php echo utf8_decode($fac->razon_social);  ?></td>
+            <td><?php echo utf8_decode($fac->direccion);  ?></td>
+            <td><?php echo $fac->fecha ; ?></td>
+            <!--<td><?php echo $fac->vencimiento ; ?></td>
+            <td><?php echo $fac->atraso; ?></td>-->
+            <td>$<?php echo number_format($fac->total,0);    $c1 += $fac->total; ?></td>
+            <!--<td>$<?php echo number_format($fac->anticipo,0); $c2 += $fac->anticipo;?></td>-->
+            <td>$<?php echo number_format($fac->pagado + $fac->anticipo - $fac->descontado,0);   $c3 += $fac->pagado + $fac->anticipo - $fac->descontado;?></td>
+            <td>$<?php echo number_format($fac->total-$fac->anticipo-$fac->pagado,0); $c4+= $fac->total-$fac->anticipo-$fac->pagado;?></td>
+            <td>$<?php echo number_format($fac->descontado,0); $c5 += $fac->descontado;?></td>
+           <td colspan="2">
+            	<table width="100%" cellpadding="1" cellspacing="1" border="0" style="padding:0px;">
+                	<!--<tr><td width="50%">FECHA</td><td width="50%">ABONO</td></tr>-->
+                <tr>
+            	<?php foreach($ant->find(" factura_id = '$fac->id' and anulado = 0") as $ant): ?>
+                			<td width="50%"><?php echo $antenc->findFirst(" id = '$ant->anticipos_id' ")->fecha; ?></td><td width="50%">$<?php echo number_format($ant->valor,0); ?></td>
+				<?php endforeach; ?>
+                </tr>
+                <tr>
+                <?php foreach($rec->find(" factura_id = '$fac->id' and anulado = 0") as $rec): ?>
+                			<td width="50%"><?php echo $recenc->findFirst(" id = '$rec->recibos_caja_id' ")->fecha; ?></td><td width="50%">$<?php echo number_format($rec->total - $rec->descuento,0); ?></td>		
+				<?php endforeach; ?>
+                </tr>
+           		 </table>
+            </td>
+			
+            <?php if($fac->empresa_id == 2){ ?>
+            <td><?php echo Tag::linkTo("facturacion/show/$fac->id", Tag::image("64x64/Search.png","width: 20"),"target: _blank") ?></td>
+            <td><?php echo Tag::linkTo("print/facturacion_html/$fac->id", Tag::image("iconos/impresora.png","width: 20"),"target: _blank") ?></td>
+            <td><?php echo Tag::linkTo("facturacion/modificar/$fac->id", Tag::image("64x64/Edit.png","width: 20"),"target: _blank") ?></td>
+            <?php }else{ ?>
+            <td><?php echo Tag::linkTo("cuenta_cobro/show/$fac->id", Tag::image("64x64/Search.png","width: 20"),"target: _blank") ?></td>
+            <td><?php echo Tag::linkTo("print/cuenta_cobro_html/$fac->id", Tag::image("iconos/impresora.png","width: 20"),"target: _blank") ?></td>
+            <td><?php echo Tag::linkTo("cuenta_cobro/modificar/$fac->id", Tag::image("64x64/Edit.png","width: 20"),"target: _blank") ?></td>
+            <?php }?> 
+			<td><?php echo Tag::button("ver","id: ver_pagos$i","name: ver_pagos$i"); ?>
+                <script>
+                	new Event.observe("ver_pagos<?php echo $i; ?>", "click", function(){
+								
+								 parametros = '';
+								 parametros += "factura_id=<?php echo $fac->id; ?>";
+								 parametros += "&empresa_id=<?php echo $fac->empresa_id; ?>";
+								
+										
+								 Dialog.alert(
+									{
+										url: "<?php echo core::getInstancePath(); ?>libros/ver_pagos/?"+parametros, 
+										options: {method: 'get'
+										, evalScripts: true}
+									}, 
+									{
+										className: "mac_os_x", width:900,height:600,
+										okLabel: "Click Aqui Para Cerrar Esta Ventana"}
+									);
+									
+									
+						 });
+                </script></td>
+          </tr>
+        <?php $i++; endforeach; ?> 
+         <tr>
+            <th colspan="4" align="right">TOTALES</th>
+            <td>$<?php echo number_format($c1,0); ?></td>
+           <!--<td>$<?php echo number_format($c2,0); ?></td>-->
+           <td>$<?php echo number_format($c3,0); ?></td>
+           <td>$<?php echo number_format($c4,0); ?></td>
+           <td>$<?php echo number_format($c5,0); ?></td>
+           <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+             <td>&nbsp;</td>
+            <!--<td>&nbsp;</td>-->
+  </tr>
+ </table>
+ <?php //echo $sql; ?>
+<?php echo view::getContent(); ?>
+
+<div align="center">
+  <table border="0" cellpadding="2" id="remisiones"  cellspacing="2">
+    <tr>
+      <td align="center"><?php echo Tag::linkTo("#", Tag::image("64x64/Back.png",'width: 32px'),"onClick: window.close();") ?></td>
+      <td align="center"><?php echo Tag::linkTo("menu/", Tag::image("iconos/inicio.png",'width: 32px'),"tittle: Regresar al Menu"); ?></td>
+    </tr>
+    <tr>
+      <td align="center">Regresar</td>
+      <td align="center">Inicio</td>
+    </tr>
+  </table>
+</div>

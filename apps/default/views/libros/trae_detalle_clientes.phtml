@@ -1,0 +1,138 @@
+<br /><br />
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td colspan="4"><h1>Empresa: <?php echo $empresa->nombre_empresa; ?></h1></td>
+  </tr>
+  <tr>
+    <td width="18%">NOMBRE CLIENTES</td>
+    <td width="26%"><?php echo utf8_encode($clientes->razon_social); ?></td>
+    <td width="19%">&nbsp;</td>
+    <td width="37%">&nbsp;</td>
+  </tr>
+  <tr>
+    <td>DIRECCION CASA</td>
+    <td><?php echo $clientes->direccion_casa; ?></td>
+    <td>DIRECCION OFICINA</td>
+    <td><?php echo $clientes->direccion_oficina; ?></td>
+  </tr>
+  <tr>
+    <td>TELEFONOS</td>
+    <td><?php echo $clientes->telefono1; ?>-<?php echo $clientes->telefono2; ?></td>
+    <td>CELULAR</td>
+    <td><?php echo $clientes->celular; ?></td>
+  </tr>
+  <tr>
+    <td>CORREO</td>
+    <td><?php echo utf8_encode($clientes->correo); ?></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<h1>REMISIONES</h1>
+<table border="0" cellpadding="1" id="detalleclientes" width="100%">
+  <tr>
+    <th>NUMERO</th>
+    <th>CLIENTE</th>
+    <th>DIRECCIÓN</th>
+    <th>FECHA</th>
+    <th>VER</th>
+    <!--<th>MOD.</th>-->
+    <th>IMPRIMIR</th>
+  </tr>
+        <?php 
+		 $i=0;	
+		 $cliente = new Clientes();
+		 $dir = new Direccion();
+		 foreach($remisiones as $rem): ?>  
+          <tr>
+            <td><?php echo $rem->prefijo.$rem->consecutivo; ?></td>
+            <td><?php echo utf8_encode($cliente->findFirst("id = '$rem->clientes_id'")->razon_social);  ?></td>
+            <td><?php echo utf8_encode($dir->findFirst("id = '$rem->direccion_id'")->direccion);  ?></td>
+            <td><?php echo $rem->fecha; ?></td>
+            <td align="center"><?php echo Tag::linkTo("remisiones/show/$rem->id", Tag::image("iconos/buscar.png",'width: 20'),"target: _blank") ?></td>
+           <!-- <td><?php //echo Tag::linkTo("remisiones/modificar/$rem->id", Tag::image("64x64/Edit.png",'width: 25px')); ?></td> -->
+            <td align="center"><?php echo Tag::linkTo("print/remisiones_html/$rem->id", Tag::image("iconos/impresora.png",'width: 20'),"target: _blank"); ?></td>
+  </tr>
+        <?php $i++; endforeach; ?> 
+ </table>
+ 
+ 
+<h1>DEVOLUCIONES</h1>
+<table border="0" cellpadding="1" id="detalleclientes" width="100%">
+  <tr>
+    <th>NUMERO</th>
+    <th>CLIENTE</th>
+    <th>DIRECCIÓN</th>
+    <th>FECHA</th>
+    <th>VER</th>
+    <!--<th>MOD.</th>-->
+    <th>IMPRIMIR</th>
+  </tr>
+        <?php 
+		 $i=0;	
+		 $cliente = new Clientes();
+		 $dir = new Direccion();
+		 foreach($devoluciones as $dev): ?>  
+          <tr>
+            <td><?php echo $dev->prefijo.$dev->consecutivo; ?></td>
+            <td><?php echo utf8_encode($cliente->findFirst("id = '$dev->clientes_id'")->razon_social);  ?></td>
+            <td><?php echo utf8_encode($dir->findFirst("id = '$dev->direccion_id'")->direccion);  ?></td>
+            <td><?php echo $dev->fecha ; ?></td>
+            <td align="center"><?php echo Tag::linkTo("devoluciones/show/$dev->id", Tag::image("iconos/buscar.png",'width: 20'),"target: _blank") ?></td>
+            <!--<td><?php //echo Tag::linkTo("devoluciones/modificar/$rem->id", Tag::image("64x64/Edit.png",'width: 25px')); ?></td>-->
+            <td align="center"><?php echo Tag::linkTo("print/devoluciones_html/$rem->id", Tag::image("iconos/impresora.png",'width: 20'),"target: _blank"); ?></td>
+  </tr>
+        <?php $i++; endforeach; ?> 
+ </table>
+
+<h1>FACTURAS</h1>
+<table border="0" cellpadding="1" id="remisiones" width="100%">
+  <tr>
+    <th>NUMERO</th>
+    <th>CLIENTE</th>
+    <th>DIRECCIÓN</th>
+    <th>FECHA</th>
+    <th>VER</th>
+    <th>IMPRIMIR</th>
+  </tr>
+        <?php 
+		 $i=0;	
+		 $cliente = new Clientes();
+		 $dir = new Direccion();
+		 foreach($facturas as $fac): ?>  
+          <tr>
+            <td><?php echo $fac->prefijo.$fac->consecutivo; ?></td>
+            <td><?php echo utf8_encode($cliente->findFirst("id = '$fac->clientes_id'")->razon_social);  ?></td>
+            <td><?php echo utf8_encode($dir->findFirst("id = '$fac->direccion_id'")->direccion);  ?></td>
+            <td><?php echo $fac->fecha ; ?></td>
+            <?php if($fac->empresa_id = 1){ ?>
+            <td align="center"><?php echo Tag::linkTo("cuenta_cobro/show/$fac->id", Tag::image("iconos/buscar.png",'width: 20'),"target: _blank") ?></td>
+            <td align="center"><?php echo Tag::linkTo("print/cuenta_cobro_html/$fac->id", Tag::image("iconos/impresora.png",'width: 20'),"target: _blank") ?></td>
+            <?php }else{ ?>
+    	        <td align="center"><?php echo Tag::linkTo("facturacion/show/$fac->id", Tag::image("iconos/buscar.png",'width: 20'),"target: _blank") ?></td>
+	            <td align="center"><?php echo Tag::linkTo("print/facturacion_html/$fac->id", Tag::image("iconos/impresora.png",'width: 20'),"target: _blank") ?></td>
+            <?php } ?>
+  </tr>
+        <?php $i++; endforeach; ?> 
+ </table>
+ 
+ 
+<div align="center">
+  <table border="0" cellpadding="2" id="remisiones2"  cellspacing="2">
+    <tr>
+      <td align="center"><?php echo Tag::linkTo("#", Tag::image("64x64/Back.png",'width: 32px'),"onClick: window.close();") ?></td>
+      <td align="center"><?php echo Tag::linkTo("menu/", Tag::image("iconos/inicio.png",'width: 32px')); ?></td>
+      <!-- <td align="center"><?php //echo Tag::linkTo("print/remisiones/$rem->id", Tag::image("iconos/pdf.png",'width: 32px'),"target: _blank");s ?></td> -->
+    </tr>
+    <tr>
+      <td align="center">Regresar</td>
+      <td align="center">Inicio</td>
+      <!--<td align="center">Pdf</td>-->
+    </tr>
+  </table>
+</div>
+<p>&nbsp;</p>
+<div id="mensajes"></div>
+

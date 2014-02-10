@@ -1,0 +1,26 @@
+<table border="0" cellpadding="1" id="devoluciones" width="100%">
+   <tr>
+    <th>DEVOLUCION</th>
+    <th>CLIENTE</th>
+    <th>DIRECCIÓN</th>
+    <th>FECHA</th>
+    <th>VER</th>
+    <th>IMPRIMIR</th>
+  </tr>
+        <?php 
+		 $i=0;	
+		 $cliente = new Clientes();
+		 $dir = new Direccion();
+		 foreach($devoluciones as $dev): ?>  
+          <tr>
+            <td><?php echo $dev->prefijo.$dev->consecutivo; ?></td>
+            <td><?php echo utf8_encode($cliente->findFirst("id = '$dev->clientes_id'")->razon_social);  ?></td>
+            <td><?php echo utf8_encode($dir->findFirst("id = '$dev->direccion_id'")->direccion); ?></td>
+            <td><?php echo $dev->fecha ; ?></td>
+
+            <td><?php echo Tag::linkTo("devoluciones/show/$dev->id", Tag::image("64x64/Search.png","width: 20"),"target: _blank"); ?></td>
+            <td><?php echo Tag::linkTo("print/devoluciones/$dev->id", Tag::image("iconos/impresora.png","width: 20"),"target: _blank"); ?></td>
+          </tr>
+        <?php $i++; endforeach; ?> 
+ </table>
+ <div id="mensajes">

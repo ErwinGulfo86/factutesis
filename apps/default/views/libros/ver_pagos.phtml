@@ -1,0 +1,86 @@
+<h1>ANTICIPOS</h1>
+
+<table border="0" cellpadding="1" id="remisiones" width="100%" style="font-size:12pt;">
+  <tr>
+    <th>NUMERO</th>
+    <th>FECHA</th>
+   
+   
+    <th>ABONADO</th>
+    
+    <!--<th>&nbsp;</th>-->
+  </tr>
+        <?php 
+		 $i=0;	
+		
+		 $c1 = 0;
+		
+		// $dtrc = new DetalleRecibosCaja();
+		 // 1 - 
+		 // 2 - 
+		 foreach($anticipos as $fac): 
+		 //$total = $dtrc->sum("total","conditions: recibos_caja_id = '$fac->id' and anulado='0' ");
+		 ?>  
+          <tr>
+            <td><?php echo $fac->prefijo.$fac->consecutivo; ?></td>
+            <td><?php echo $fac->fecha ; ?></td>
+            <td align="right">$<?php echo number_format($fac->valor,0);    $c1 += $fac->valor; ?></td>
+         
+            <!--<td align="center"><?php //echo Tag::linkTo("print/anticipos/$fac->id", Tag::image("iconos/pdf.png","width: 20"),"target: _blank") ?></td>-->
+          </tr>
+        <?php $i++; endforeach; ?> 
+         <tr>
+            <th colspan="2" align="right">TOTALES</th>
+            <th align="right">$<?php echo number_format($c1,0); ?></th>
+           <!-- <th>&nbsp;</th>-->
+  </tr>
+ </table>
+
+
+
+<h1>RECIBOS DE CAJA</h1>
+
+<table border="0" cellpadding="1" id="remisiones" width="100%" style="font-size:12pt;">
+  <tr>
+    <th>NUMERO</th>
+    <th>FECHA</th>
+   
+   
+    <th>TOTAL</th>
+    
+    <!--<th>&nbsp;</th>-->
+  </tr>
+        <?php 
+		 $i=0;	
+		
+		 $c2 = 0;
+		
+		 //$dtrc = new DetalleRecibosCaja();
+		 // 1 - 
+		 // 2 - 
+		 foreach($recibos_caja as $fac): 
+		 //$total = $dtrc->sum("total","conditions: recibos_caja_id = '$fac->id' and anulado='0' ");
+		 ?>  
+          <tr>
+            <td><?php echo $fac->prefijo.$fac->consecutivo; ?></td>
+            <td><?php echo $fac->fecha ; ?></td>
+            <td align="right">$<?php echo number_format($fac->total - $fac->descuento,0);    $c2 += $fac->total- $fac->descuento; ?></td>
+            <!--<td align="center"><?php //echo Tag::linkTo("print/recibos_caja/$fac->id", Tag::image("iconos/pdf.png","width: 20"),"target: _blank") ?></td>-->
+          </tr>
+        <?php $i++; endforeach; ?> 
+         <tr>
+            <th colspan="2" align="right">TOTALES</th>
+            <th align="right">$<?php echo number_format($c2,0); ?></th>
+           <!--<th>&nbsp;</th>-->
+  </tr>
+ </table>
+<h1>TOTAL GENERAL</h1>
+<table border="0" cellpadding="1" id="remisiones" width="100%" style="font-size:12pt;">
+  <tr>
+            <th colspan="3" align="right">TOTAL GENERAL</th>
+            <th>$<?php echo number_format($c1+$c2,0); ?></th>
+           <!-- <th>&nbsp;</th> -->
+  </tr>
+ </table>
+ 
+<?php echo view::getContent(); ?>
