@@ -96,7 +96,7 @@
 				$cli->direccion_casa = $this->getPostParam("direccion_casa");
 				$cli->direccion_oficina = $this->getPostParam("direccion_oficina");
 				$cli->telefono1 = $this->getPostParam("telefono1");
-				$cli->telefono2 = $this->getPostParam("tf2");
+				$cli->telefono2 = $this->getPostParam("telefono2");
 				$cli->celular = $this->getPostParam("celular");
 				//$cli->departamentos_id = $this->getPostParam("dptos");
 				$cli->departamentos_id = $this->getPostParam("departamentos_id");
@@ -241,6 +241,9 @@
 						$clientes->razon_social = $this->getPostParam("razon_social");
 						$clientes->direccion_casa = $this->getPostParam("direccion_casa");
 						$clientes->direccion_oficina = $this->getPostParam("direccion_oficina");
+						$clientes->telefono1 = $this->getPostParam("telefono1");
+						$clientes->telefono2 = $this->getPostParam("telefono2");
+						$clientes->celular = $this->getPostParam("celular");
 						$clientes->departamentos_id = $this->getPostParam("departamentos_id");
 						$clientes->municipios_id = $this->getPostParam("municipios_id");
 						$clientes->activo = 0;

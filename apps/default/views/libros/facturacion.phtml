@@ -1,46 +1,53 @@
-<?php
-$path = $_SERVER['DOCUMENT_ROOT'];
-$path .= Core::getInstancePath()."public/reportes";
-$path_class = $path."/phpjasperxml_0.8c/";
-$path_class = $path."/PHPJasperXML-master/";
-//echo $path."<br>";
-//echo $path_class;
+<?php echo Tag::formRemote("libros/detalle_facturas", "update: mensajes", "id: facturas","name: facturas"); ?>
 
-$config = CoreConfig::readEnviroment();
-		//print_r(CoreConfig::readEnviroment());
+<h1>REPORTE DE FACTURAS POR FECHA</h1>
 
-$host = "";
-$user = "";
-$psw  = "";
-$bd   = "";
+<table width="100%" border="0" cellpadding="0" id="r1">
+  
+  <tr>
+    <td align="right">EMPRESA:</td>
+    <td colspan="3">
+		<?php $empresa = new Empresa(); echo Tag::select("empresa_id",$empresa->find(),'using: id,nombre_empresa'); ?>
+        <script>$('empresa_id').value = '<?php echo Session::get("id_empresa"); ?>';</script>
+        </td>
+  </tr>
+  <tr>
+    <td align="right">CLIENTES</td>
+    <td colspan="3"><?php echo Tag::textFieldExt("clientes"); ?></td>
+  </tr>
+  <tr>
+    <td width="15%"><div align="right">DESDE</div></td>
+    <td width="10%"><?php echo Tag::textField("desde","value: ".Date::getFirstDayofMonth( date("m"),date("Y") ),"size: 30"); ?></td>
+    <td width="19%"><div align="right">HASTA</div></td>
+    <td width="10%"><?php echo Tag::textField("hasta","value: ".Date::getLastDayofMonth( date("m"),date("Y") ),"size: 30"); ?></td>
+  </tr>
+  
+  <tr>
+    <td colspan="4" align="center"><button id="guardar" name="guardar">Enviar</button></td>
+  </tr>
+</table>
 
-foreach($config->development as $key=>$val):
-		if($key == "database.host"     ){ $host = $val; }
-		if($key == "database.username" ){ $user = $val; }
-		if($key == "database.password" ){ $psw  = $val; }
-		if($key == "database.name"     ){ $bd   = $val; }
-endforeach;
+<div id="mensajes" style="min-height:50px;"></div>
 
-$server = $host;
-$pass   = $psw;
-$db     = $bd;
-		
-		
-//include_once($path_class."class/fpdf/fpdf.php");
-include_once($path_class."class/tcpdf/tcpdf.php");
-include_once($path_class."class/PHPJasperXML.inc.php");
-error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+<?php echo Tag::endForm(); ?>
 
 
-$xml = simplexml_load_file($path."/inventario/"."inventario_general.jrxml");
 
-$PHPJasperXML = new PHPJasperXML("en","TCPDF");
-//$PHPJasperXML->debugsql=false;
-//$parametro=$_GET['parametro'];
-//$PHPJasperXML->arrayParameter=array("parametro"=>$parametro);
-$PHPJasperXML->xml_dismantle($xml);
-//$PHPJasperXML->connect($server,$user,$pass,$db);
-$PHPJasperXML->transferDBtoArray($server,$user,$pass,$db);
-$PHPJasperXML->outpage("I");
+<div align="center"><button id="exportar" type="button">Exportar Informe a Pdf</button></div>
 
-?>
+
+
+<script>
+jQuery(document).ready(function(e) {
+	jQuery("#exportar").button({ icons: {primary:'ui-icon ui-icon-circle-check' ,secondary:'ui-icon-triangle-1-s'}       });	
+    
+	jQuery("#exportar").click(function(e) {
+		e.preventDefault();
+		datos = "clientes_id=" + jQuery("#clientes_id").val() + "&desde=" + jQuery("#desde").val() +"&hasta=" + jQuery("#hasta").val() +"&otro=true"
+		window.open("<?php echo core::getInstancePath(); ?>/libros/facturacionpdf/?"+datos);
+		return false;
+    });
+});
+</script>
+
+
