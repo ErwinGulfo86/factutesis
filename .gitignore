@@ -1,5 +1,4 @@
-
-apps/default/config/environment.ini
+*.ini
 
 #################
 ## Eclipse
